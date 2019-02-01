@@ -1,22 +1,31 @@
 let man = {
   height: 180,
   weight: 70,
-  wealth: 1000
+  wealth: 1000000
 }
 
 class Observer {
   constructor(obj) {
-    Object.keys(obj).forEach(prop => {
-      this[prop] = obj[prop]
-    })
-    this.init()
-  }
-  init() {
-    this.walk(this)
+    this.walk(obj)
   }
   walk(obj) {
     Object.keys(obj).forEach(prop => {
-      this.defineReactive(obj, prop, obj[prop])
+      this[prop] = obj[prop]
+      this.proxyData(obj, prop)
+      this.defineReactive(this, prop, obj[prop])      
+    })
+  }
+  proxyData(obj, prop) {
+    let _this = this
+    Object.defineProperty(obj, prop, {
+      get() {
+        return _this[prop]
+      },
+      set(newVal) {
+        console.log(this)
+        console.log('_this', _this)
+        _this[prop] = newVal
+      }
     })
   }
   defineReactive(obj, prop, val) {
@@ -30,9 +39,9 @@ class Observer {
         val = newVal
         console.log(`${prop} - 被修改！`)
       }
-    })  
+    })
   }
 }
 
-let observer = new Observer(man)
-console.dir(observer)
+let ins = new Observer(man)
+// console.dir(ins)
