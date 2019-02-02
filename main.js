@@ -13,7 +13,7 @@ class Dep {
     console.log('依赖添加', Dep.target)
     this.deps.push(Dep.target)
   }
-  update() {
+  notify() {
     this.deps.forEach(dep => {
       dep()
     })
@@ -56,7 +56,7 @@ class Observer {
         if (newVal == val) return
         val = newVal
         console.log(`${prop} - 被修改！`)
-        dep.update()        
+        dep.notify()        
       }
     })
   }
